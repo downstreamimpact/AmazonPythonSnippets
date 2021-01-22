@@ -1,0 +1,11 @@
+version: "3"
+
+
+services:
+  snippets:
+    build:
+      context: .
+    volumes:
+      - ./:/var/task/
+    stdin_open: true
+    tty: true
