@@ -3,9 +3,9 @@ import csv
 import json
 
 import requests
+import smart_open
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
-from smart_open import open
 
 from snippets.clients.spa_client import SpaClient
 
@@ -33,7 +33,7 @@ def decrypt_vc_report(
     original_s3_url = f"{s3_url}/{original_s3_key}"
     final_s3_url = f"{s3_url}/{final_s3_key}"
 
-    with open(original_s3_url, "wb", ignore_ext=True) as outfile:
+    with smart_open.open(original_s3_url, "wb", ignore_ext=True) as outfile:
         bytes_read = 0
         for chunk in download_res.iter_content(256 * 1024):
             bytes_read += len(chunk)
@@ -44,9 +44,9 @@ def decrypt_vc_report(
 
             outfile.write(content)
 
-    with open(original_s3_url, encoding=download_res.encoding) as infile, open(
-        final_s3_url, "wb"
-    ) as outfile:
+    with smart_open.open(
+        original_s3_url, encoding=download_res.encoding
+    ) as infile, smart_open.open(final_s3_url, "wb") as outfile:
         delimiter = "\t"
         reader = csv.DictReader(infile, delimiter=delimiter)
         for row in reader:
